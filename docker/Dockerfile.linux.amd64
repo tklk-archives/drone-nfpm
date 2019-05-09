@@ -1,10 +1,10 @@
 FROM golang:1.12-alpine AS build-nfpm
 
-RUN apk --no-cache add git && \
+RUN apk --no-cache add git musl-dev gcc && \
 	GO111MODULE=on go get -u github.com/goreleaser/nfpm/cmd/nfpm@v0.11.0 && \
 	/go/bin/nfpm -v
 
-FROM plugins/base:multiarch
+FROM alpine:3.9
 
 LABEL maintainer="Matti Ranta <hello@techknowlogick.com>" \
   org.label-schema.name="Drone NFPM" \

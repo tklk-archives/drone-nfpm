@@ -1,0 +1,19 @@
+FROM golang:1.12 AS build-nfpm
+
+RUN apk --no-cache add git && \
+	GO111MODULE=on go get -u github.com/goreleaser/nfpm/cmd/nfpm@v0.11.0 && \
+	/go/bin/nfpm -v
+
+FROM plugins/base:multiarch
+
+LABEL maintainer="Matti Ranta <hello@techknowlogick.com>" \
+  org.label-schema.name="Drone NFPM" \
+  org.label-schema.vendor="tklk" \
+  org.label-schema.schema-version="1.0"
+
+RUN apk --no-cache add rpm
+
+COPY --from=build-nfpm /go/bin/nfpm /bin/nfpm
+
+ADD release/linux/arm64/drone-nfpm /bin/
+ENTRYPOINT [ "/bin/drone-nfpm" ]

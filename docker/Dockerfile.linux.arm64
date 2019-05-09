@@ -1,4 +1,4 @@
-FROM golang:1.12 AS build-nfpm
+FROM golang:1.12-alpine AS build-nfpm
 
 RUN apk --no-cache add git && \
 	GO111MODULE=on go get -u github.com/goreleaser/nfpm/cmd/nfpm@v0.11.0 && \
